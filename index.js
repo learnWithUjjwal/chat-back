@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
 const API_KEY = require('./config.js');
-// var mysql = require("mysql");
+var mysql = require("mysql");
 
 const server = express();
 server.use(bodyParser.urlencoded({
@@ -14,20 +14,20 @@ server.use(bodyParser.json());
 ///////////////////////////////////////////////////////////////////////
 // DB config
 
-// var db_config = {
-//   host: 'localhost',
-//   user:'root',
-//     password: '',
-//     database: 'test'    
-// };
+var db_config = {
+  host: 'localhost',
+  user:'root',
+    password: '',
+    database: 'test'    
+};
 
-// var con = mysql.createConnection(db_config);
-// con.connect((err)=>{
-// 	if (err) console.log(err);
-// 	else{
-// 		console.log("conneected")
-// 	}
-// })
+var con = mysql.createConnection(db_config);
+con.connect((err)=>{
+	if (err) console.log(err);
+	else{
+		console.log("conneected")
+	}
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -65,22 +65,45 @@ server.post('/get-movie-details', (req, res) => {
 });
 
 
-// server.post('/stud', (req, res) => {
-// 	roll = req.body.result.parameters.roll;
-// 	console.log(roll);
-// 	var stm = `select * from test where roll = ${roll}`;
-// 	con.query(stm, (err, data) => {
+server.post('/stud', (req, res) => {
+	job = req.body.result.parameters.job;
+	console.log(job);
+    const reqUrl = encodeURI(`http://appointer-backend-api.herokuapp.com/getUsers/${job}`);
+   http.get(reqUrl, (responseFromAPI) => {
+        console.log(responseFromAPI)
+        let completeResponse = '';
+        responseFromAPI.on('data', (chunk) => {
+            completeResponse += chunk;
+        });
+        responseFromAPI.on('end', () => {
+            const movie = JSON.parse(completeResponse);
 
-// 		dataToSend = `my name is ${data[0].name} & My Roll No. is ${data[0].roll}`;
-// 		return res.json({
-//                 speech: dataToSend,
-//                 displayText: dataToSend,
-//                 source: 'stud'
-//             });
+            dataToSend = `List of ${job}s: 1. ${movie.data[0].name}:${movie.data[0].phone}
+            2. ${movie.data[1].name}:${movie.data[1].phone}`
+     return res.json({
+                speech: dataToSend,
+                displayText: dataToSend,
+                source: 'stud'
+            });
+            
+        });
+    });
 
-// 	})
+	// var stm = `select * from job where job = '${job}'`;
+	// con.query(stm, (err, data) => {
+ //        if (err) console.log(err);
 
-// })
+	// 	dataToSend = `List of ${job}s: 1. ${data[0].name}:${data[0].mob}
+ //        2. ${data[1].name}:${data[1].mob}`;
+	// 	return res.json({
+ //                speech: dataToSend,
+ //                displayText: dataToSend,
+ //                source: 'stud'
+ //            });
+
+	// })
+
+})
 
 server.post('/test', (req, res) => {
 	job = req.body.result.parameters.job;
