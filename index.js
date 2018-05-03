@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
-const API_KEY = require('./config.js');
-var mysql = require("mysql");
+// const API_KEY = require('./config.js');
+// var mysql = require("mysql");
 
 const server = express();
 server.use(bodyParser.urlencoded({
@@ -14,20 +14,20 @@ server.use(bodyParser.json());
 ///////////////////////////////////////////////////////////////////////
 // DB config
 
-var db_config = {
-  host: 'localhost',
-  user:'root',
-    password: '',
-    database: 'test'    
-};
+// var db_config = {
+//   host: 'localhost',
+//   user:'root',
+//     password: '',
+//     database: 'test'    
+// };
 
-var con = mysql.createConnection(db_config);
-con.connect((err)=>{
-	if (err) console.log(err);
-	else{
-		console.log("conneected")
-	}
-})
+// var con = mysql.createConnection(db_config);
+// con.connect((err)=>{
+// 	if (err) console.log(err);
+// 	else{
+// 		console.log("conneected")
+// 	}
+// })
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
